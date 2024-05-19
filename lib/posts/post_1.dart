@@ -8,6 +8,7 @@ class Post1 extends StatefulWidget {
 
 class _Post1State extends State<Post1> {
   late VideoPlayerController _controller;
+  int _likeCount = 123;
 
   @override
   void initState() {
@@ -27,6 +28,48 @@ class _Post1State extends State<Post1> {
     _controller.dispose();
   }
 
+  void _showCommentsBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 400,
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.all(16.0),
+                child: Text(
+                  'Comments',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: 20,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text('Comment $index'),
+                    );
+                  },
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: 'Add a comment',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,12 +85,51 @@ class _Post1State extends State<Post1> {
                     child: VideoPlayer(_controller),
                   ),
                 ),
-                Container(
-                  child: Text("sd"),
-                )
-               
+                Positioned(
+                  bottom: 40,
+                  right: 20,
+                  child: Column(
+                    children: [
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.thumb_up, color: Colors.white),
+                            onPressed: () {
+                              setState(() {
+                                _likeCount++;
+                              });
+                            },
+                          ),
+                          Text(
+                            '$_likeCount',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10), // Add spacing between the icons
+                      Column(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.comment, color: Colors.white),
+                            onPressed: () {
+                              _showCommentsBottomSheet(context);
+                            },
+                          ),
+                          Text(
+                            '45',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10), // Add spacing between the icons
+                      IconButton(
+                        icon: Icon(Icons.share, color: Colors.white),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ),
               ],
-              
             )
           : Center(child: CircularProgressIndicator()),
     );

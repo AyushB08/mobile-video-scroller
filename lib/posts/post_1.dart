@@ -3,21 +3,21 @@ import 'package:video_player/video_player.dart';
 
 class Post1 extends StatefulWidget {
   @override
-  _Post1State createState() => _Post1State();
+  Post1State createState() => Post1State();
 }
 
-class _Post1State extends State<Post1> {
-  late VideoPlayerController _controller;
-  int _likeCount = 123;
+class Post1State extends State<Post1> {
+  late VideoPlayerController controller;
+  int likeCount = 123;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset('assets/video1.mp4')
+    controller = VideoPlayerController.asset('assets/video1.mp4')
       ..initialize().then((_) {
         setState(() {
-          _controller.play();
-          _controller.setLooping(true);
+          controller.play();
+          controller.setLooping(true);
         });
       });
   }
@@ -25,10 +25,10 @@ class _Post1State extends State<Post1> {
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
+    controller.dispose();
   }
 
-  void _showCommentsBottomSheet(BuildContext context) {
+  void showCommentsBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -48,17 +48,40 @@ class _Post1State extends State<Post1> {
                   itemCount: 20,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      title: Text('Comment $index'),
+                      title: Row(
+                        children: [
+                          Expanded(
+                            child: Text('Comment $index'),
+                          ),
+                          Column(
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.thumb_up, size: 20), // Adjust size as needed
+                                onPressed: () {
+                                  // Handle like button press
+                                },
+                              ),
+                              Text('0'), // Replace '0' with actual like count
+                            ],
+                          ),
+                        ],
+                      ),
                     );
                   },
                 ),
               ),
+
+
               Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.only(left: 50, top: 0, right: 50, bottom: 30),
+
                 child: TextField(
                   decoration: InputDecoration(
                     labelText: 'Add a comment',
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    
                   ),
                 ),
               ),
@@ -73,16 +96,16 @@ class _Post1State extends State<Post1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _controller.value.isInitialized
+      body: controller.value.isInitialized
           ? Stack(
               fit: StackFit.expand,
               children: <Widget>[
                 FittedBox(
                   fit: BoxFit.cover,
                   child: SizedBox(
-                    width: _controller.value.size.width,
-                    height: _controller.value.size.height,
-                    child: VideoPlayer(_controller),
+                    width: controller.value.size.width,
+                    height: controller.value.size.height,
+                    child: VideoPlayer(controller),
                   ),
                 ),
                 Positioned(
@@ -96,12 +119,12 @@ class _Post1State extends State<Post1> {
                             icon: Icon(Icons.thumb_up, color: Colors.white),
                             onPressed: () {
                               setState(() {
-                                _likeCount++;
+                                likeCount++;
                               });
                             },
                           ),
                           Text(
-                            '$_likeCount',
+                            '$likeCount',
                             style: TextStyle(color: Colors.white),
                           ),
                         ],
@@ -112,7 +135,7 @@ class _Post1State extends State<Post1> {
                           IconButton(
                             icon: Icon(Icons.comment, color: Colors.white),
                             onPressed: () {
-                              _showCommentsBottomSheet(context);
+                              showCommentsBottomSheet(context);
                             },
                           ),
                           Text(

@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:video_scroller/screens/home.dart';
+import 'package:video_scroller/screens/home.dart'; 
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key); 
 
-  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Video Scroller",
-      
-      home:  Home()
+      home: Home(), 
     );
   }
 }
-
